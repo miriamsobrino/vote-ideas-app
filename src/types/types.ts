@@ -4,3 +4,9 @@ export interface Idea {
   author?: string;
   votes: number;
 }
+
+export interface UserDB {
+  id: string;
+  username: string;
+  email: string;
+}

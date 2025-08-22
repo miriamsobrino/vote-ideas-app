@@ -8,9 +8,7 @@ interface IdeasContextType {
   voteIdea: (id: string) => void;
 }
 
-export const IdeasContext = createContext<IdeasContextType | undefined>(
-  undefined
-);
+const IdeasContext = createContext<IdeasContextType | undefined>(undefined);
 
 export const IdeasProvider = ({ children }: { children: React.ReactNode }) => {
   const [ideas, setIdeas] = useState<Idea[]>([]);

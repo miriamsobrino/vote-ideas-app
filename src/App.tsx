@@ -1,8 +1,10 @@
 import { SquarePlay } from "lucide-react";
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState } from "react";
 import { Button } from "./components/Button";
 import { Card } from "./components/Card";
 import { useIdeas } from "./context/IdeasContext";
+import { useAuth } from "./context/AuthContext";
+import { Header } from "./components/Header";
 
 import "./App.css";
 
@@ -12,38 +14,30 @@ function App() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [mode, setMode] = useState<"login" | "register">("login");
   const [isOpen, setIsOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, signup, isUsernameTaken } = useAuth();
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const handleAddIdea = (event: React.FormEvent) => {
     event.preventDefault();
     addIdea(idea);
     setIdea("");
   };
-
   const openDialog = (type: "login" | "register") => {
     setMode(type);
     setIsOpen(true);
   };
-
   const closeDialog = () => {
     setIsOpen(false);
   };
 
   return (
     <>
-      <header className="w-full p-4 absolute top-0">
-        <nav className="flex justify-end mr-">
-          <ul className="flex gap-4 items-center">
-            <li>
-              <Button variant="link" onClick={() => openDialog("login")}>
-                Iniciar sesión
-              </Button>
-            </li>
-            <li>
-              <Button className="w-full ">Únete a la comunidad</Button>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
+      <Header openDialog={openDialog} />
       <main className="flex flex-col justify-center items-center h-screen gap-8">
         {isOpen && (
           <>
@@ -61,27 +55,123 @@ function App() {
 
               <form
                 className="flex flex-col gap-3"
-                onSubmit={(event: FormEvent) => {
+                onSubmit={async (event: React.FormEvent) => {
                   event.preventDefault();
-                  closeDialog();
+                  setUsernameError("");
+                  setEmailError("");
+                  setPasswordError("");
+                  setErrorMessage("");
+                  if (mode === "login") {
+                    try {
+                      await login(email, password);
+                      closeDialog();
+                    } catch (error: unknown) {
+                      if (error instanceof Error) {
+                        const e = error as { code?: string; message: string };
+
+                        switch (e.code) {
+                          case "auth/user-not-found":
+                            setEmailError(
+                              "No existe una cuenta con este correo."
+                            );
+                            break;
+                          case "auth/wrong-password":
+                            setPasswordError("Contraseña incorrecta.");
+                            break;
+                          case "auth/invalid-email":
+                            setEmailError("Correo electrónico no válido.");
+                            break;
+                          default:
+                            setErrorMessage(e.message);
+                        }
+                      }
+                    }
+                  } else {
+                    try {
+                      const formattedUsername = username
+                        .trim()
+                        .replace(/\s+/g, "_")
+                        .toLowerCase();
+
+                      const taken = await isUsernameTaken(formattedUsername);
+                      if (taken) {
+                        setUsernameError(
+                          "El nombre de usuario ya está en uso."
+                        );
+                        return;
+                      }
+                      if (password.length < 6) {
+                        setPasswordError(
+                          "La contraseña debe tener al menos 6 caracteres."
+                        );
+                        return;
+                      }
+                      await signup(formattedUsername, email, password);
+                      closeDialog();
+                    } catch (error: unknown) {
+                      if (error instanceof Error) {
+                        const e = error as { code?: string; message: string };
+                        switch (e.code) {
+                          case "auth/email-already-in-use":
+                            setEmailError(
+                              "Este correo electrónico ya está en uso."
+                            );
+                            break;
+                          case "auth/invalid-email":
+                            setEmailError("Correo electrónico no válido.");
+                            break;
+                          case "auth/weak-password":
+                            setPasswordError(
+                              "La contraseña es demasiado débil."
+                            );
+                            break;
+                          default:
+                            setErrorMessage(e.message);
+                        }
+                      } else {
+                        setErrorMessage("Ocurrió un error desconocido.");
+                      }
+                    }
+                  }
                 }}
               >
+                {mode === "register" && (
+                  <>
+                    <input
+                      placeholder="Nombre de usuario"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="flex-1 focus:outline-0 border-1 focus:border-indigo-200 border-indigo-100 rounded-md px-4 py-2 bg-slate-50/40 "
+                    />
+                    {usernameError && (
+                      <p className="text-sm text-red-500 px-4">
+                        {usernameError}
+                      </p>
+                    )}
+                  </>
+                )}
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Correo electrónico"
                   className="flex-1 focus:outline-0 border-1 focus:border-indigo-200 border-indigo-100 rounded-md px-4 py-2 bg-slate-50/40 "
                 />
+                {emailError && (
+                  <p className="text-sm text-red-500 px-4">{emailError}</p>
+                )}
                 <input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Contraseña"
                   className="flex-1 focus:outline-0 border-1 focus:border-indigo-200 border-indigo-100 rounded-md px-4 py-2 bg-slate-50/40 "
-                />
-                {mode === "register" && (
-                  <input
-                    type="password"
-                    placeholder="Confirmar contraseña"
-                    className="flex-1 focus:outline-0 border-1 focus:border-indigo-200 border-indigo-100 rounded-md px-4 py-2 bg-slate-50/40 "
-                  />
+                />{" "}
+                {passwordError && (
+                  <p className="text-sm text-red-500 px-4">{passwordError}</p>
+                )}
+                {errorMessage && (
+                  <p className="text-sm text-red-500 px-4">{errorMessage}</p>
                 )}
                 <Button type="submit" className="w-full hover:rotate-0">
                   {mode === "login" ? "Entrar" : "Registrarse"}
@@ -96,7 +186,7 @@ function App() {
                       onClick={() => setMode("register")}
                       className=" font-semibold cursor-pointer "
                     >
-                      Registrarse
+                      Regístrate
                     </Button>
                   </>
                 ) : (
@@ -161,7 +251,7 @@ function App() {
               ))
           ) : (
             <p className=" text-center  justify-center bg-gradient-to-r  from-indigo-50 via-slate-50 to-indigo-50  p-4 backdrop-blur-3xl rounded-lg border-1 border-indigo-100 flex items-center">
-              No hay ideas todavía. ¡Se el primero en agregar una!
+              No hay ideas todavía. ¡Sé el primero en agregar una!
             </p>
           )}
         </section>

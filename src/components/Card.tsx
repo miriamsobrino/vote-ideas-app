@@ -2,6 +2,7 @@ import { ThumbsUp } from "lucide-react";
 import { Button } from "./Button";
 import { useState } from "react";
 import type { Idea } from "../types/types";
+import { useAuth } from "../context/AuthContext";
 interface CardProps extends Idea {
   onVote: () => void;
 }
@@ -9,6 +10,7 @@ interface CardProps extends Idea {
 export const Card = ({ title, votes, onVote }: CardProps) => {
   const [hasVoted, setHasVoted] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const { user } = useAuth();
 
   const handleVote = () => {
     if (hasVoted) return;
@@ -20,13 +22,13 @@ export const Card = ({ title, votes, onVote }: CardProps) => {
       <div className="flex flex-col  ">
         <h3 className="font-semibold">{title}</h3>
         <p className="text-sm text-gray-400">
-          Sugerido por <span>@miri.code</span>
+          Sugerido por <span>@{user?.displayName}</span>
         </p>
       </div>
       <div className="flex gap-6  ">
         <p className="text-center flex flex-col text-sm ">
           <span className="text-2xl -mb-2 font-semibold">{votes}</span>
-          votos
+          {votes === 1 ? "voto" : "votos"}
         </p>
         <div
           className="relative flex items-center"
@@ -45,7 +47,7 @@ export const Card = ({ title, votes, onVote }: CardProps) => {
             {hasVoted ? "Votado" : "Votar"}
           </Button>
           {hasVoted && isHovering && (
-            <div className="bg-slate-50/70 text-center w-36 rounded-md -top-8 left-10 border-1 border-indigo-200  px-3 py-1 absolute z-50 ">
+            <div className="bg-slate-50/70 text-center w-36 rounded-md -top-6 left-10 border-1 border-indigo-200  px-3 py-1 absolute z-50 ">
               <p>¡Ya has votado!</p>
             </div>
           )}
