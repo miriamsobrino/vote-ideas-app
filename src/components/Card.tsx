@@ -3,26 +3,33 @@ import { Button } from "./Button";
 import { useState } from "react";
 import type { Idea } from "../types/types";
 import { useAuth } from "../context/AuthContext";
+
 interface CardProps extends Idea {
   onVote: () => void;
 }
 
-export const Card = ({ title, votes, onVote }: CardProps) => {
-  const [hasVoted, setHasVoted] = useState(false);
+export const Card = ({
+  title,
+  votes,
+  voters = [],
+  author,
+  onVote,
+}: CardProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const { user } = useAuth();
 
+  const hasVoted = user ? voters.includes(user.uid) : false;
   const handleVote = () => {
+    console.log("votado");
     if (hasVoted) return;
     onVote();
-    setHasVoted(true);
   };
   return (
     <article className=" bg-gradient-to-r  from-indigo-50 via-slate-50 to-indigo-50  p-4 backdrop-blur-3xl rounded-lg border-1 border-indigo-100 flex justify-between items-center">
       <div className="flex flex-col  ">
         <h3 className="font-semibold">{title}</h3>
         <p className="text-sm text-gray-400">
-          Sugerido por <span>@{user?.displayName}</span>
+          Sugerido por <span>@{author}</span>
         </p>
       </div>
       <div className="flex gap-6  ">

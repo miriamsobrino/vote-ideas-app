@@ -11,7 +11,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { child, get, ref, set } from "firebase/database";
 import type { UserDB } from "../types/types";
-/* eslint-disable react-refresh/only-export-components */
+
 interface AuthContextType {
   user: User | null;
   signup: (username: string, email: string, password: string) => Promise<void>;

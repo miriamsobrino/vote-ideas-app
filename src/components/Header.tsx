@@ -2,7 +2,7 @@ import Avatar from "boring-avatars";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "./Button";
 import { useState } from "react";
-import { LogOut } from "lucide-react";
+import { LogOut, Smile } from "lucide-react";
 
 interface HeaderProps {
   openDialog: (type: "login" | "register") => void;
@@ -54,7 +54,7 @@ export const Header = ({ openDialog }: HeaderProps) => {
             </li>
             <li>
               <Button className="w-full" onClick={() => openDialog("register")}>
-                Únete a la comunidad
+                Únete a la comunidad <Smile size={16} />
               </Button>
             </li>
           </ul>
