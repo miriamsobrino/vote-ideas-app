@@ -1,4 +1,4 @@
-import { SquarePlay } from "lucide-react";
+import { ChevronLeft, ChevronRight, SquarePlay } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./components/Button";
 import { Card } from "./components/Card";
@@ -17,6 +17,11 @@ function App() {
   const { ideas, setIdeas, voteIdea, addIdea } = useIdeas();
   const [_mode, setMode] = useState<"login" | "register">("login");
   const [isOpen, setIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ideasPerPage = 5;
+  const indexOfLastIdea = currentPage * ideasPerPage;
+  const indexOfFirstIdea = indexOfLastIdea - ideasPerPage;
+  const currentIdeas = ideas.slice(indexOfFirstIdea, indexOfLastIdea);
   const { user } = useAuth();
   const currentUser = user?.displayName ?? "Anónimo";
 
@@ -76,11 +81,10 @@ function App() {
         <div className="flex flex-col gap-2 items-center ">
           <SquarePlay size={40} />
           <h1 className=" text-3xl font-semibold  text-center flex items-center">
-            ¿Qué quieres ver en el próximo vídeo?
+            ¿Qué quieres ver en los próximos vídeos de miricode?
           </h1>
           <h2 className="text-xl ">
-            Comparte tus ideas para próximos videos y vota por las que más te
-            interesen.
+            Comparte tus ideas y vota por las que más te interesen.
           </h2>
         </div>
 
@@ -95,8 +99,8 @@ function App() {
         </form>
 
         <section className="w-1/4 gap-2 flex flex-col">
-          {ideas.length > 0 ? (
-            ideas.map((i) => (
+          {currentIdeas.length > 0 ? (
+            currentIdeas.map((i) => (
               <Card
                 key={i.id}
                 id={i.id}
@@ -113,6 +117,27 @@ function App() {
               No hay ideas todavía. ¡Sé el primero en agregar una!
             </p>
           )}
+          <div className="flex gap-2 mt-4 items-center justify-center">
+            <Button
+              variant="button"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft size={16} />
+            </Button>
+            <span> {currentPage}</span>
+            <Button
+              variant="button"
+              onClick={() =>
+                setCurrentPage((prev) =>
+                  prev * ideasPerPage < ideas.length ? prev + 1 : prev
+                )
+              }
+              disabled={currentPage * ideasPerPage >= ideas.length}
+            >
+              <ChevronRight size={16} />
+            </Button>
+          </div>
         </section>
       </main>
     </>
