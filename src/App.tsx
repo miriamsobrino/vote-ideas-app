@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, SquarePlay, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, SquarePlay } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./components/Button";
 import { Card } from "./components/Card";
@@ -68,7 +68,7 @@ function App() {
   return (
     <>
       <Header openDialog={openDialog} />
-      <main className="px-4 lg:px-0 flex flex-col justify-center items-center h-screen gap-8">
+      <main className="px-4 lg:px-0 flex flex-col justify-center items-center h-screen gap-8 overflow-y-hidden">
         {isOpen && (
           <>
             <div
