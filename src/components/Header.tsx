@@ -21,7 +21,7 @@ export const Header = ({ openDialog }: HeaderProps) => {
   };
   return (
     <header className="w-full p-4 absolute top-0">
-      <nav className="flex justify-end mr-4">
+      <nav className="flex justify-center md:justify-end md:mr-4">
         {user ? (
           <div className="flex items-center gap-2">
             <Avatar
