@@ -56,7 +56,7 @@ export const Card = ({
     <div className="relative w-full overflow-hidden">
       {isUserIdea && (
         <Button
-          className="absolute right-0 top-0 h-full bg-red-500 text-white"
+          className="absolute right-0 top-0 h-full bg-red-500/60 text-white "
           onClick={() => deleteIdea(id)}
         >
           <Trash2 size={18} />
@@ -64,7 +64,7 @@ export const Card = ({
       )}
 
       <article
-        className="w-full bg-gradient-to-r from-indigo-50 via-slate-50 to-indigo-50 p-4 backdrop-blur-3xl rounded-lg border border-indigo-100 flex justify-between items-center transition-transform duration-300 ease-in-out"
+        className="w-full bg-gradient-to-r  from-indigo-50 via-slate-50 to-indigo-50 p-4 backdrop-blur-3xl rounded-lg border border-indigo-100 flex justify-between items-center transition-transform duration-300 ease-in-out"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

@@ -72,7 +72,7 @@ function App() {
     <>
       <Header openDialog={openDialog} />
       <Toaster position="top-center" className="text-center" />
-      <main className="px-4 lg:px-0 py-20 lg:py-0 flex flex-col justify-center items-center min-h-screen gap-8 flex-1">
+      <main className="px-4 lg:px-0 py-4 lg:py-0 flex flex-col justify-center items-center min-h-screen gap-8 flex-1">
         {isOpen && (
           <>
             <div
