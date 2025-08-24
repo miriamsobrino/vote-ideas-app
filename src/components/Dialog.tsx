@@ -5,11 +5,13 @@ import { Button } from "./Button";
 import { X } from "lucide-react";
 
 interface DialogProps {
+  mode: "login" | "register";
+  setMode: (mode: "login" | "register") => void;
   closeDialog: () => void;
 }
-export const Dialog = ({ closeDialog }: DialogProps) => {
+export const Dialog = ({ mode, setMode, closeDialog }: DialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [mode, setMode] = useState<"login" | "register">("login");
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

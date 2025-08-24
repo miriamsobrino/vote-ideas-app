@@ -11,11 +11,12 @@ import { db } from "./config/firebase";
 import { useAuth } from "./context/AuthContext";
 import type { Idea } from "./types/types";
 import "./App.css";
+import { toast, Toaster } from "sonner";
 
 function App() {
   const [idea, setIdea] = useState("");
   const { ideas, setIdeas, voteIdea, addIdea } = useIdeas();
-  const [_mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register">("login");
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const ideasPerPage = 5;
@@ -50,7 +51,9 @@ function App() {
 
   const handleAddIdea = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    if (!user) {
+      toast.error("Debes iniciar sesión para poder agregar una idea");
+    }
     addIdea(idea, username, user!.uid);
 
     setIdea("");
@@ -68,6 +71,7 @@ function App() {
   return (
     <>
       <Header openDialog={openDialog} />
+      <Toaster position="top-center" className="text-center" />
       <main className="px-4 lg:px-0 py-20 lg:py-0 flex flex-col justify-center items-center min-h-screen gap-8 flex-1">
         {isOpen && (
           <>
@@ -75,7 +79,7 @@ function App() {
               onClick={closeDialog}
               className="fixed inset-0 bg-indigo-950/20 backdrop-blur-sm z-10"
             />
-            <Dialog closeDialog={closeDialog} />
+            <Dialog closeDialog={closeDialog} mode={mode} setMode={setMode} />
           </>
         )}
         <div className="flex flex-col gap-2 items-center text-center">
