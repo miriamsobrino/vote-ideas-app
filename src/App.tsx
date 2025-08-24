@@ -114,8 +114,8 @@ function App() {
               />
             ))
           ) : (
-            <p className=" text-center  justify-center bg-gradient-to-r from-indigo-50 via-slate-50 to-indigo-50  p-4 backdrop-blur-3xl rounded-lg border-1 border-indigo-100 flex items-center">
-              No hay ideas todavía. ¡Sé el primero en agregar una!
+            <p className=" text-center justify-center bg-gradient-to-r from-indigo-50 via-slate-50 to-indigo-50  p-4 backdrop-blur-3xl rounded-lg border-1 border-indigo-100 flex items-center">
+              No hay ideas todavía. ¡Empieza agregando una!
             </p>
           )}
           {ideas.length > 0 && (
