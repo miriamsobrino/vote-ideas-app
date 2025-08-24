@@ -6,11 +6,11 @@ import { useIdeas } from "./context/IdeasContext";
 import { Header } from "./components/Header";
 import { Input } from "./components/Input";
 import { Dialog } from "./components/Dialog";
-import { onValue, ref, set } from "firebase/database";
+import { onValue, ref } from "firebase/database";
 import { db } from "./config/firebase";
 import { useAuth } from "./context/AuthContext";
-import "./App.css";
 import type { Idea } from "./types/types";
+import "./App.css";
 
 function App() {
   const [idea, setIdea] = useState("");

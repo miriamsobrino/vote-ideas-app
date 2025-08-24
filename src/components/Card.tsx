@@ -31,25 +31,22 @@ export const Card = ({
     onVote();
   };
 
-  // Swipe handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     const deltaX = e.touches[0].clientX - startX;
-    if (deltaX < 0) setTranslateX(deltaX); // solo deslizar a la izquierda
+    if (deltaX < 0) setTranslateX(deltaX);
   };
 
   const handleTouchEnd = () => {
-    // Umbral para mostrar el botón de delete
     if (translateX < -50) setTranslateX(-60);
     else setTranslateX(0);
   };
 
   return (
     <div className="relative w-full overflow-hidden">
-      {/* Botón delete detrás */}
       {isUserIdea && (
         <div
           className="absolute right-0 top-0 h-full w-16 flex items-center justify-center text-red-500 cursor-pointer"
