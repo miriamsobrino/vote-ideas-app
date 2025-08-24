@@ -68,7 +68,7 @@ function App() {
   return (
     <>
       <Header openDialog={openDialog} />
-      <main className="px-4 lg:px-0 flex flex-col justify-center items-center min-h-screen gap-8">
+      <main className="px-4 lg:px-0 py-20 lg:py-0 flex flex-col justify-center items-center min-h-screen gap-8 flex-1">
         {isOpen && (
           <>
             <div
@@ -78,7 +78,7 @@ function App() {
             <Dialog closeDialog={closeDialog} />
           </>
         )}
-        <div className="flex flex-col gap-2 items-center text-center mt-14 lg:mt-0">
+        <div className="flex flex-col gap-2 items-center text-center">
           <SquarePlay size={40} />
           <h1 className=" text-xl lg:text-3xl font-semibold  text-center flex items-center">
             ¿Qué quieres ver en los próximos vídeos de miricode?
@@ -119,7 +119,7 @@ function App() {
             </p>
           )}
           {ideas.length > 0 && (
-            <div className="flex gap-2 mt-4 items-center justify-center mb-20">
+            <div className="flex gap-2 mt-4 items-center justify-center">
               <Button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
