@@ -24,7 +24,7 @@ export const Dialog = ({ mode, setMode, closeDialog }: DialogProps) => {
   return (
     <dialog
       ref={dialogRef}
-      className="p-6 rounded-lg flex flex-col gap-4 z-50 bg-slate-50/100    backdrop-blur-xl border-1 border-indigo-100 w-full max-w-lg h-[350px] justify-center fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+      className="p-6 rounded-lg flex flex-col gap-4 z-50 bg-slate-50/100    backdrop-blur-xl border-1 border-indigo-100 w-11/12 lg:w-full max-w-lg h-[350px] justify-center fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     >
       <h2 className="text-xl font-semibold">
         {mode === "login" ? "Iniciar sesión" : "Registrarse"}
