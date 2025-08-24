@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Idea } from "../types/types";
-import { onValue, ref, set, update } from "firebase/database";
+import { onValue, ref, remove, set, update } from "firebase/database";
 import { db } from "../config/firebase";
 
 interface IdeasContextType {
   ideas: Idea[];
   setIdeas: React.Dispatch<React.SetStateAction<Idea[]>>;
-  addIdea: (title: string, author: string) => void;
+  addIdea: (title: string, author: string, authorId: string) => void;
+  deleteIdea: (id: string) => void;
   voteIdea: (id: string, userId: string) => void;
 }
 
@@ -29,13 +30,14 @@ export const IdeasProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const addIdea = (title: string, author: string) => {
+  const addIdea = (title: string, author: string, authorId: string) => {
     if (!title.trim()) return;
 
     const newIdea: Idea = {
       id: crypto.randomUUID(),
       title,
       author,
+      authorId,
       votes: 0,
       voters: [],
       createdAt: new Date().toISOString(),
@@ -44,7 +46,12 @@ export const IdeasProvider = ({ children }: { children: React.ReactNode }) => {
     setIdeas((prev) => [newIdea, ...prev]);
     set(ref(db, "ideas/" + newIdea.id), newIdea);
   };
-
+  const deleteIdea = (id: string) => {
+    const ideasToDelete = ideas.filter((i) => i.id !== id);
+    setIdeas(ideasToDelete);
+    const ideaRef = ref(db, "ideas/" + id);
+    remove(ideaRef);
+  };
   const voteIdea = (id: string, userId: string) => {
     setIdeas((prev) =>
       prev.map((idea) => {
@@ -68,7 +75,9 @@ export const IdeasProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
   return (
-    <IdeasContext.Provider value={{ ideas, setIdeas, addIdea, voteIdea }}>
+    <IdeasContext.Provider
+      value={{ ideas, setIdeas, addIdea, deleteIdea, voteIdea }}
+    >
       {children}
     </IdeasContext.Provider>
   );
