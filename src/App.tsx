@@ -68,7 +68,7 @@ function App() {
   return (
     <>
       <Header openDialog={openDialog} />
-      <main className="px-4 lg:px-0 flex flex-col justify-center items-center h-screen gap-8 overflow-y-hidden">
+      <main className="px-4 lg:px-0 flex flex-col justify-center items-center h-screen gap-8">
         {isOpen && (
           <>
             <div
