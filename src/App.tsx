@@ -101,24 +101,17 @@ function App() {
         <section className="w-full lg:w-1/4 gap-2 flex flex-col">
           {currentIdeas.length > 0 ? (
             currentIdeas.map((i) => (
-              <div className="flex gap-2 w-full items-center ">
-                <Card
-                  key={i.id}
-                  id={i.id}
-                  title={i.title}
-                  votes={i.votes}
-                  voters={i.voters || []}
-                  author={i.author}
-                  authorId={i.authorId}
-                  createdAt={i.createdAt}
-                  onVote={() => voteIdea(i.id, user!.uid)}
-                />
-                {user?.uid === i.authorId && (
-                  <Button className="text-red-500 !w-10 !h-10  !px-1 hover:transform-none">
-                    <Trash2 size={18} />
-                  </Button>
-                )}
-              </div>
+              <Card
+                key={i.id}
+                id={i.id}
+                title={i.title}
+                votes={i.votes}
+                voters={i.voters || []}
+                author={i.author}
+                authorId={i.authorId}
+                createdAt={i.createdAt}
+                onVote={() => voteIdea(i.id, user!.uid)}
+              />
             ))
           ) : (
             <p className=" text-center  justify-center bg-gradient-to-r from-indigo-50 via-slate-50 to-indigo-50  p-4 backdrop-blur-3xl rounded-lg border-1 border-indigo-100 flex items-center">

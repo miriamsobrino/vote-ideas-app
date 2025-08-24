@@ -24,46 +24,52 @@ export const Card = ({
   const hasVoted = user ? voters.includes(user.uid) : false;
 
   const [translateX, setTranslateX] = useState(0);
-  const [startX, setStartX] = useState(0);
-
-  const handleVote = () => {
-    if (hasVoted) return;
-    onVote();
-  };
+  const [startX, setStartX] = useState<number | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    const deltaX = e.touches[0].clientX - startX;
-    if (deltaX < 0) setTranslateX(deltaX);
+    if (startX === null) return;
+    const delta = e.touches[0].clientX - startX;
+
+    if (!isUserIdea) return;
+
+    if (delta < -100) setTranslateX(-100);
+    else if (delta > 0) setTranslateX(0);
+    else setTranslateX(delta);
   };
 
   const handleTouchEnd = () => {
-    if (translateX < -50) setTranslateX(-60);
-    else setTranslateX(0);
+    if (translateX > -50) setTranslateX(0);
+    else setTranslateX(-100);
+    setStartX(null);
+  };
+
+  const handleVote = () => {
+    if (hasVoted) return;
+    onVote();
   };
 
   return (
     <div className="relative w-full overflow-hidden">
       {isUserIdea && (
-        <div
-          className="absolute right-0 top-0 h-full w-16 flex items-center justify-center text-red-500 cursor-pointer"
+        <Button
+          className="absolute right-0 top-0 h-full bg-red-500 text-white"
           onClick={() => deleteIdea(id)}
         >
           <Trash2 size={18} />
-        </div>
+        </Button>
       )}
 
       <article
-        className="w-full bg-gradient-to-r from-indigo-50 via-slate-50 to-indigo-50 p-4 backdrop-blur-3xl rounded-lg border border-indigo-100 flex justify-between items-center"
+        className="w-full bg-gradient-to-r from-indigo-50 via-slate-50 to-indigo-50 p-4 backdrop-blur-3xl rounded-lg border border-indigo-100 flex justify-between items-center transition-transform duration-300 ease-in-out"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         style={{
           transform: `translateX(${translateX}px)`,
-          transition: translateX === 0 ? "transform 0.2s" : "none",
         }}
       >
         <div className="flex flex-col">
