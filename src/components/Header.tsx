@@ -38,7 +38,7 @@ export const Header = ({ openDialog }: HeaderProps) => {
             />
 
             {isOpenProfile && (
-              <div className="absolute top-16 right-8 bg-slate-50/30 backdrop-blur-2xl border-1 border-indigo-100 px-4 py-2 rounded-md flex flex-col gap-2 items-center">
+              <div className="absolute top-16 right-4 md:right-8 bg-slate-50/30 backdrop-blur-2xl border-1 border-indigo-100 px-4 py-2 rounded-md flex flex-col gap-2 items-center">
                 <span>@{user.displayName}</span>
                 <Button
                   onClick={handleLogout}
