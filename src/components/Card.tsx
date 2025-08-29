@@ -2,11 +2,12 @@ import { ThumbsUp, Trash2 } from "lucide-react";
 import { Button } from "./Button";
 import { useState } from "react";
 import type { Idea } from "../types/types";
-import { useAuth } from "../context/AuthContext";
-import { useIdeas } from "../context/IdeasContext";
 
 interface CardProps extends Idea {
   onVote: () => void;
+  isMobile: boolean;
+  isUserIdea: boolean;
+  deleteIdea: (id: string) => void;
 }
 
 export const Card = ({
@@ -17,24 +18,23 @@ export const Card = ({
   author,
   authorId,
   onVote,
+  isMobile,
+  isUserIdea,
+  deleteIdea,
 }: CardProps) => {
-  const { user } = useAuth();
-  const { deleteIdea } = useIdeas();
-  const isUserIdea = user?.uid === authorId;
-  const hasVoted = user ? voters.includes(user.uid) : false;
-
   const [translateX, setTranslateX] = useState(0);
   const [startX, setStartX] = useState<number | null>(null);
 
+  const hasVoted = voters ? voters.includes(authorId) : false;
+
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isMobile) return;
     setStartX(e.touches[0].clientX);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (startX === null) return;
+    if (!isMobile || startX === null || !isUserIdea) return;
     const delta = e.touches[0].clientX - startX;
-
-    if (!isUserIdea) return;
 
     if (delta < -100) setTranslateX(-100);
     else if (delta > 0) setTranslateX(0);
@@ -42,6 +42,7 @@ export const Card = ({
   };
 
   const handleTouchEnd = () => {
+    if (!isMobile) return;
     if (translateX > -50) setTranslateX(0);
     else setTranslateX(-100);
     setStartX(null);
@@ -53,10 +54,10 @@ export const Card = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden">
-      {isUserIdea && (
+    <div className="relative w-full items-center flex">
+      {isUserIdea && isMobile && (
         <Button
-          className="absolute right-0 top-0 h-full bg-red-500/60 text-white "
+          className="absolute right-0 top-0 h-full bg-red-500/60 text-white"
           onClick={() => deleteIdea(id)}
         >
           <Trash2 size={18} />
@@ -64,7 +65,7 @@ export const Card = ({
       )}
 
       <article
-        className="w-full bg-gradient-to-r  from-indigo-50 via-slate-50 to-indigo-50 p-4 backdrop-blur-3xl rounded-lg border border-indigo-100 flex justify-between items-center transition-transform duration-300 ease-in-out"
+        className="w-full bg-gradient-to-r from-indigo-50 via-slate-50 to-indigo-50 p-4 backdrop-blur-3xl rounded-lg border border-indigo-100 flex justify-between items-center transition-transform duration-300 ease-in-out"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -94,6 +95,14 @@ export const Card = ({
           </Button>
         </div>
       </article>
+      {isUserIdea && !isMobile && (
+        <Button
+          className="text-red-500 p-2 flex items-center !w-12 !h-12 justify-center rounded absolute -right-16 hover:bg-red-500/60 transition-all duration-300  hover:text-white !rotate-0"
+          onClick={() => deleteIdea(id)}
+        >
+          <Trash2 size={18} />
+        </Button>
+      )}
     </div>
   );
 };
