@@ -8,6 +8,7 @@ interface CardProps extends Idea {
   isMobile: boolean;
   isUserIdea: boolean;
   deleteIdea: (id: string) => void;
+  currentUserId: string;
 }
 
 export const Card = ({
@@ -16,7 +17,7 @@ export const Card = ({
   votes,
   voters = [],
   author,
-  authorId,
+  currentUserId,
   onVote,
   isMobile,
   isUserIdea,
@@ -25,7 +26,7 @@ export const Card = ({
   const [translateX, setTranslateX] = useState(0);
   const [startX, setStartX] = useState<number | null>(null);
 
-  const hasVoted = voters ? voters.includes(authorId) : false;
+  const hasVoted = voters ? voters.includes(currentUserId) : false;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return;

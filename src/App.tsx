@@ -126,6 +126,7 @@ function App() {
                     isMobile={isMobile}
                     isUserIdea={isUserIdea}
                     deleteIdea={deleteIdea}
+                    currentUserId={user?.uid ?? ""}
                   />
                 </div>
               );
