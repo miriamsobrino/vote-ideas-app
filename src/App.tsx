@@ -84,7 +84,7 @@ function App() {
           </>
         )}
 
-        <div className="flex flex-col gap-2 items-center text-center">
+        <div className="flex flex-col gap-2 items-center text-center mt-20 lg:mt-0">
           <SquarePlay size={40} />
           <h1 className="text-xl lg:text-3xl font-semibold flex items-center justify-center text-center">
             ¿Qué quieres ver en los próximos vídeos de miricode?
