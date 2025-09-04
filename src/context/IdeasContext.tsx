@@ -55,11 +55,15 @@ export const IdeasProvider = ({ children }: { children: React.ReactNode }) => {
   const voteIdea = (id: string, userId: string) => {
     setIdeas((prev) =>
       prev.map((idea) => {
-        if (idea.id === id && !idea.voters?.includes(userId)) {
+        if (idea.id === id) {
+          const hasVoted = idea.voters?.includes(userId);
+          const voters = idea.voters ?? [];
           const updatedIdea = {
             ...idea,
-            votes: idea.votes + 1,
-            voters: [...(idea.voters || []), userId],
+            votes: hasVoted ? idea.votes - 1 : idea.votes + 1,
+            voters: hasVoted
+              ? voters.filter((v) => v !== userId)
+              : [...voters, userId],
           };
 
           const ideaRef = ref(db, "ideas/" + id);

@@ -50,7 +50,6 @@ export const Card = ({
   };
 
   const handleVote = () => {
-    if (hasVoted) return;
     onVote();
   };
 
@@ -85,13 +84,18 @@ export const Card = ({
             <span className="text-2xl -mb-2 font-semibold">{votes}</span>
             {votes === 1 ? "voto" : "votos"}
           </p>
-          <Button onClick={handleVote} disabled={hasVoted}>
-            <ThumbsUp
-              size={16}
-              className={`transition-all duration-300 ${
-                hasVoted ? "opacity-20 cursor-default" : "group-hover:-rotate-3"
-              }`}
-            />
+          <Button
+            onClick={handleVote}
+            className={`${hasVoted ? "opacity-80" : "opacity-100"}`}
+          >
+            {!hasVoted && (
+              <ThumbsUp
+                size={16}
+                className="transition-all duration-300 
+                 group-hover:-rotate-3"
+              />
+            )}
+
             {hasVoted ? "Votado" : "Votar"}
           </Button>
         </div>
